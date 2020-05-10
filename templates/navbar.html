@@ -1,72 +1,74 @@
 {% load static %}
 {% load cart_template_tags %}
-  <nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
-    <div class="container">
+<nav class="navbar fixed-top navbar-expand-lg navbar-light white scrolling-navbar">
+  <div class="container">
 
-      <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="{% url 'home-page' %}">
-        <strong class="blue-text">Ecomm</strong>
-      </a>
+    <!-- Brand -->
+    <a class="navbar-brand waves-effect" href="{% url 'home-page' %}">
+      <strong class="blue-text">Ecomm</strong>
+    </a>
 
-      <!-- Collapse -->
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+    <!-- Collapse -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- Links -->
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <!-- Links -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
 
-        <!-- Left -->
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link waves-effect" href="{% url 'home-page' %}">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="{% url 'all-product-view' %}">Products</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="{% url 'checkout-page' %}">Checkout</a>
-          </li>
-          <!-- <li class="nav-item">
+      <!-- Left -->
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link waves-effect" href="{% url 'home-page' %}">Home
+            <span class="sr-only">(current)</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'all-product-view' %}">Products</a>
+        </li>
+        <!-- <li class="nav-item">
             <a class="nav-link waves-effect" href="#" target="_blank">Free
               tutorials</a>
           </li> -->
-        </ul>
+      </ul>
 
-        <!-- Right -->
-        <ul class="navbar-nav nav-flex-icons">
-          {% if request.user.is_authenticated %}
-          <li class="nav-item">
-            <a href="{% url 'order-summary'%}" class="nav-link waves-effect">
-              <span class="badge red z-depth-1 mr-1">{{request.user|cart_item_count}}</span>
-              <i class="fas fa-shopping-cart"></i>
-              <span class="clearfix d-none d-sm-inline-block"> Cart </span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="{% url 'account_logout' %}">
-              <span class="clearfix d-none d-sm-inline-block"> Logout </span>
-            </a>
-          </li>
-          {% else %}
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="{% url 'account_login' %}">
-              <span class="clearfix d-none d-sm-inline-block"> login </span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="{% url 'account_signup' %}">
-              <span class="clearfix d-none d-sm-inline-block"> Signup </span>
-            </a>
-          </li>
-          {% endif %}
-        </ul>
-
-      </div>
+      <!-- Right -->
+      <ul class="navbar-nav nav-flex-icons">
+        {% if request.user.is_authenticated %}
+        <li class="nav-item">
+          <a href="{% url 'order-summary'%}" class="nav-link waves-effect">
+            <span class="badge red z-depth-1 mr-1">{{request.user|cart_item_count}}</span>
+            <i class="fas fa-shopping-cart"></i>
+            <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+          </a>
+        </li>
+        <li class="dropdown">
+          <a class="nav-link dropdown-toggle nav-item" data-toggle="dropdown">Profile<span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li class="nav-item"><a href="#" class="nav-link "><i class="fa fa-user" aria-hidden="true"></i>
+                | {{request.user.username}}</a>
+            <li class="nav-item"><a href="{% url 'account_logout'%}" class="nav-link ">
+                <i class="fa fa-sign-out" aria-hidden="true">
+                </i> Logout</a>
+            </li>
+          </ul>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account_login' %}">
+            <span class="clearfix d-none d-sm-inline-block"> Login </span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link waves-effect" href="{% url 'account_signup' %}">
+            <span class="clearfix d-none d-sm-inline-block"> Signup </span>
+          </a>
+        </li>
+        {% endif %}
+      </ul>
 
     </div>
-  </nav>
-  
+
+  </div>
+</nav>
