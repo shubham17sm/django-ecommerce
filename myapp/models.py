@@ -23,9 +23,9 @@ LABEL_NAME_CHOICES = (
     ('O', 'OFFER')
 )
 ADDRESS_TYPE_CHOICES = (
-    ('H', 'Home'),
-    ('OF', 'Office'),
-    ('OT', 'Other')
+    ('Home', 'Home'),
+    ('Office', 'Office'),
+    ('Other', 'Other')
 )
 
 
@@ -107,7 +107,7 @@ class Order(models.Model):
 class BilingAddress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, 
                             on_delete=models.CASCADE)
-    address_type = models.CharField(choices=ADDRESS_TYPE_CHOICES, max_length=2, blank=True, null=True)
+    address_type = models.CharField(choices=ADDRESS_TYPE_CHOICES, max_length=10, blank=True, null=True)
     street_address = models.CharField(max_length=255)
     apartment_address = models.CharField(max_length=255)
     country = CountryField(multiple=False) 

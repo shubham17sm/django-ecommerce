@@ -228,3 +228,11 @@ def remove_single_item_from_cart(request, slug):
 
 def profile_view(request):
     return render(request, "user-profile.html", {})
+
+
+def manage_address_view(request):
+    qs = BilingAddress.objects.all()
+    context = {
+        'qs': qs
+    }
+    return render(request, "manage-address.html", context)

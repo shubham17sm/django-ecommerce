@@ -2,149 +2,255 @@
 {% load static %}
 
 {% block content %}
-  <!--Main layout-->
-  <main class="mt-5 pt-4">
-    <div class="container wow fadeIn">
+<style>
+  .payments-item img.mr-3 {
+    width: 47px;
+  }
 
-      <!-- Heading -->
-      <h2 class="my-5 h2 text-center">User Profile</h2>
+  .order-list .btn {
+    border-radius: 2px;
+    min-width: 121px;
+    font-size: 13px;
+    padding: 7px 0 7px 0;
+  }
 
-      <!--Grid row-->
-      <div class="row">
+  .osahan-account-page-left .nav-link {
+    padding: 18px 20px;
+    border: none;
+    font-weight: 600;
+    color: #535665;
+  }
 
-        <!--Grid column-->
-        <div class="col-md-8 mb-4">
+  .osahan-account-page-left .nav-link i {
+    width: 28px;
+    height: 28px;
+    background: #535665;
+    display: inline-block;
+    text-align: center;
+    line-height: 29px;
+    font-size: 15px;
+    border-radius: 50px;
+    margin: 0 7px 0 0px;
+    color: #fff;
+  }
 
-          <!--Card-->
-          <div class="card">
+  .osahan-account-page-left .nav-link.active {
+    background: #f3f7f8;
+    color: #282c3f !important;
+  }
 
-            <!--Card content-->
-            <form class="card-body">
+  .osahan-account-page-left .nav-link.active i {
+    background: #282c3f !important;
+  }
 
-              <!--Grid row-->
-              <div class="row">
+  .osahan-user-media img {
+    width: 90px;
+  }
 
-                <!--Grid column-->
-                <div class="col-md-6 mb-2">
+  .card offer-card h5.card-title {
+    border: 2px dotted #000;
+  }
 
-                  <!--firstName-->
-                  <div class="md-form ">
-                    <input type="text" id="firstName" class="form-control">
-                    <label for="firstName" class="">First name</label>
-                  </div>
+  .card.offer-card h5 {
+    border: 1px dotted #daceb7;
+    display: inline-table;
+    color: #17a2b8;
+    margin: 0 0 19px 0;
+    font-size: 15px;
+    padding: 6px 10px 6px 6px;
+    border-radius: 2px;
+    background: #fffae6;
+    position: relative;
+  }
 
+  .card.offer-card h5 img {
+    height: 22px;
+    object-fit: cover;
+    width: 22px;
+    margin: 0 8px 0 0;
+    border-radius: 2px;
+  }
+
+  .card.offer-card h5:after {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #daceb7;
+    content: "";
+    left: 30px;
+    position: absolute;
+    bottom: 0;
+  }
+
+  .card.offer-card h5:before {
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #daceb7;
+    content: "";
+    left: 30px;
+    position: absolute;
+    top: 0;
+  }
+
+  .payments-item .media {
+    align-items: center;
+  }
+
+  .payments-item .media img {
+    margin: 0 40px 0 11px !important;
+  }
+
+  .reviews-members .media .mr-3 {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+  }
+
+  .order-list img.mr-4 {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+    border-radius: 2px;
+  }
+
+  .osahan-cart-item p.text-gray.float-right {
+    margin: 3px 0 0 0;
+    font-size: 12px;
+  }
+
+  .osahan-cart-item .food-item {
+    vertical-align: bottom;
+  }
+
+  .h1,
+  .h2,
+  .h3,
+  .h4,
+  .h5,
+  .h6,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: #000000;
+  }
+
+  .shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important;
+  }
+
+  .rounded-pill {
+    border-radius: 50rem !important;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+</style>
+<!--Main layout-->
+<main class="mt-5 pt-4">
+  <div class="container wow fadeIn">
+
+    <!-- Heading -->
+    <h2 class="my-5 h2 text-center">User Profile</h2>
+
+    <!--Grid row-->
+    <div class="row">
+
+      <!--Grid column-->
+      <div class="col-md-8 mb-4">
+
+        <!--Card-->
+        <div class="card">
+
+          <!--Card content-->
+          <form class="card-body">
+
+            <!--Grid row-->
+            <div class="row">
+
+              <!--Grid column-->
+              <div class="col-md-6 mb-2">
+
+                <!--firstName-->
+                <div class="md-form ">
+                  <input type="text" id="firstName" class="form-control">
+                  <label for="firstName" class="">First name</label>
                 </div>
-                <!--Grid column-->
 
-                <!--Grid column-->
-                <div class="col-md-6 mb-2">
+              </div>
+              <!--Grid column-->
 
-                  <!--lastName-->
-                  <div class="md-form">
-                    <input type="text" id="lastName" class="form-control">
-                    <label for="lastName" class="">Last name</label>
-                  </div>
+              <!--Grid column-->
+              <div class="col-md-6 mb-2">
 
+                <!--lastName-->
+                <div class="md-form">
+                  <input type="text" id="lastName" class="form-control">
+                  <label for="lastName" class="">Last name</label>
                 </div>
-                <!--Grid column-->
 
               </div>
-              <!--Grid row-->
+              <!--Grid column-->
 
-              <!--Username-->
-              <div class="md-form input-group pl-0 mb-5">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon1">@</span>
-                </div>
-                <input type="text" class="form-control py-0" placeholder="Username" aria-describedby="basic-addon1">
-              </div>
-
-              <!--email-->
-              <div class="md-form mb-5">
-                <input type="text" id="email" class="form-control" placeholder="youremail@example.com">
-                <label for="email" class="">Email (optional)</label>
-              </div>
-
-              <div class="md-form mb-5">
-                <input id="Upload photo" name="Upload photo" class="input-file" type="file">
-                <label class="control-label" for="Upload photo">Upload photo</label>
-              </div>
-
-              <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
-
-            </form>
-
-          </div>
-          <!--/.Card-->
-
-        </div>
-        <!--Grid column-->
-
-        <!--Grid column-->
-        <div class="col-md-4 mb-4">
-
-          <!-- Heading -->
-          <h4 class="d-flex justify-content-between align-items-center mb-3">
-            <span class="text-muted">Your cart</span>
-            <span class="badge badge-secondary badge-pill">3</span>
-          </h4>
-
-          <!-- Cart -->
-          <!-- <ul class="list-group mb-3 z-depth-1">
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Product name</h6>
-                <small class="text-muted">Brief description</small>
-              </div>
-              <span class="text-muted">$12</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Second product</h6>
-                <small class="text-muted">Brief description</small>
-              </div>
-              <span class="text-muted">$8</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between lh-condensed">
-              <div>
-                <h6 class="my-0">Third item</h6>
-                <small class="text-muted">Brief description</small>
-              </div>
-              <span class="text-muted">$5</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between bg-light">
-              <div class="text-success">
-                <h6 class="my-0">Promo code</h6>
-                <small>EXAMPLECODE</small>
-              </div>
-              <span class="text-success">-$5</span>
-            </li>
-            <li class="list-group-item d-flex justify-content-between">
-              <span>Total (USD)</span>
-              <strong>$20</strong>
-            </li>
-          </ul> -->
-          <!-- Cart -->
-
-          <!-- Promo code -->
-          <form class="card p-2">
-            <div class="input-group">
-              <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username" aria-describedby="basic-addon2">
-              <div class="input-group-append">
-                <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Redeem</button>
-              </div>
             </div>
+            <!--Grid row-->
+
+            <!--Username-->
+            <div class="md-form input-group pl-0 mb-5">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">@</span>
+              </div>
+              <input type="text" class="form-control py-0" placeholder="Username" aria-describedby="basic-addon1">
+            </div>
+
+            <!--email-->
+            <div class="md-form mb-5">
+              <input type="text" id="email" class="form-control" placeholder="youremail@example.com">
+              <label for="email" class="">Email (optional)</label>
+            </div>
+
+            <div class="md-form mb-5">
+              <input id="Upload photo" name="Upload photo" class="input-file" type="file">
+              <label class="control-label" for="Upload photo">Upload photo</label>
+            </div>
+
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+
           </form>
-          <!-- Promo code -->
 
         </div>
-        <!--Grid column-->
+        <!--/.Card-->
 
       </div>
-      <!--Grid row-->
+      <!--Grid column-->
+
+      <!--Grid column-->
+      <div class="col-md-4 mb-4">
+        <div class="osahan-account-page-left shadow-sm bg-white h-50">
+          <div>
+            <div class="osahan-user text-center">
+              <div class="osahan-user-media">
+                <img class="mb-3 rounded-pill shadow-sm mt-1" src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                  alt="gurdeep singh osahan">
+                <div class="osahan-user-media-body">
+                  <h6 class="mb-2">Gurdeep Singh</h6>
+                  <p class="mb-1">+91 85680-79956</p>
+                  <p>iamosahan@gmail.com</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Grid column-->
 
     </div>
-  </main>
-  <!--Main layout-->
-{% endblock content %}
+    <!--Grid row-->
 
+  </div>
+</main>
+<!--Main layout-->
+{% endblock content %}
