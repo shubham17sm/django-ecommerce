@@ -15,7 +15,7 @@ urlpatterns = [
     path('remove-single-item-from-cart/<slug>/', views.remove_single_item_from_cart, name='remove-single-item-from-cart'),
     # path('add-single-item-from-cart/<slug>/', views.add_single_item_from_cart, name='add-single-item-from-cart'),
     path('checkout/', views.CheckOutView.as_view(), name='checkout-page'),
-    path('profile/', views.profile_view, name='profile'),
+    path('accounts/profile/', views.profile_view, name='profile'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),
 ]
