@@ -236,3 +236,8 @@ def manage_address_view(request):
         'qs': qs
     }
     return render(request, "manage-address.html", context)
+
+# def create_address(request):
+#     title = 'Create'
+#     qs = BilingAddress(request.POST or None)
+#     user = 
