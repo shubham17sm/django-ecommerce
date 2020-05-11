@@ -231,7 +231,7 @@ def profile_view(request):
 
 
 def manage_address_view(request):
-    qs = BilingAddress.objects.all()
+    qs = BilingAddress.objects.filter(user=request.user)
     context = {
         'qs': qs
     }
