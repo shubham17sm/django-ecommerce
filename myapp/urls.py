@@ -16,6 +16,7 @@ urlpatterns = [
     # path('add-single-item-from-cart/<slug>/', views.add_single_item_from_cart, name='add-single-item-from-cart'),
     path('checkout/', views.CheckOutView.as_view(), name='checkout-page'),
     path('manage-address/', views.manage_address_view, name='manage-address'),
+    path('create-address/', views.CreateAddress.as_view(), name='create-address'),
     path('accounts/profile/', views.profile_view, name='profile'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),

@@ -22,11 +22,20 @@ LABEL_NAME_CHOICES = (
     ('D', 'DISCOUNT'),
     ('O', 'OFFER')
 )
+
 ADDRESS_TYPE_CHOICES = (
     ('Home', 'Home'),
     ('Office', 'Office'),
     ('Other', 'Other')
 )
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    profile_picture = models.ImageField(default='media/default_user.png')
+
+    def __str__(self):
+        return self.user.username
+
 
 
 # Create your models here.
@@ -105,8 +114,7 @@ class Order(models.Model):
 
 
 class BilingAddress(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, 
-                            on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address_type = models.CharField(choices=ADDRESS_TYPE_CHOICES, max_length=10, blank=True, null=True)
     street_address = models.CharField(max_length=255)
     apartment_address = models.CharField(max_length=255)

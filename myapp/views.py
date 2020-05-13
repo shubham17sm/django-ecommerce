@@ -6,8 +6,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView, View
 from django.utils import timezone 
-from .models import Item, OrderItem, Order, BilingAddress
-from .forms import CheckoutForm
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile
+from .forms import CheckoutForm, CreateAddressForm
 
 # Create your views here.
 # def home_page(request):
@@ -16,6 +16,13 @@ from .forms import CheckoutForm
 #         'items': items_queryset,
 #     }
 #     return render(request, "home-page.html", context)
+
+def get_user_profile(user): 
+    queryset = UserProfile.objects.filter(user=user)
+    if queryset.exists():
+        return queryset[0]
+    return None
+
 
 def search(request):
     queryset = Item.objects.all()
@@ -237,7 +244,37 @@ def manage_address_view(request):
     }
     return render(request, "manage-address.html", context)
 
-# def create_address(request):
-#     title = 'Create'
-#     qs = BilingAddress(request.POST or None)
-#     user = 
+
+class CreateAddress(View):
+    def get(self, *args, **kwargs):
+        #form
+        form = CreateAddressForm()
+        title = 'Create'
+        context = {
+            'form': form,
+            'title': title
+        }
+        return render(self.request, "create-address.html", context)
+    def post(self, *args, **kwargs):
+        form = CreateAddressForm(self.request.POST or None)
+        if form.is_valid():
+            address_type = form.cleaned_data.get('address_type')
+            street_address = form.cleaned_data.get('street_address')
+            apartment_address = form.cleaned_data.get('apartment_address')
+            country = form.cleaned_data.get('country')
+            zipcode = form.cleaned_data.get('zipcode')
+            billing_address = BilingAddress(
+                    user = self.request.user,
+                    address_type=address_type,
+                    street_address=street_address,
+                    apartment_address=apartment_address,
+                    country=country,
+                    zipcode=zipcode
+            )
+            billing_address.save()
+            messages.info(self.request, "Your form has been submitted successfully")
+            return redirect('manage-address')
+        messages.warning(self.request, "Failed to update address")
+        return redirect('create-address')
+    
+
