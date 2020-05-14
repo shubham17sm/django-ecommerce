@@ -1,4 +1,4 @@
-# django-boilerplate
+# django-ecommerce
 Django ecommerce.
 
 
