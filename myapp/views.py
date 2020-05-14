@@ -3,8 +3,9 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView, View
+from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone 
 from .models import Item, OrderItem, Order, BilingAddress, UserProfile
 from .forms import CheckoutForm, CreateAddressForm
@@ -245,36 +246,121 @@ def manage_address_view(request):
     return render(request, "manage-address.html", context)
 
 
-class CreateAddress(View):
-    def get(self, *args, **kwargs):
-        #form
-        form = CreateAddressForm()
-        title = 'Create'
-        context = {
-            'form': form,
-            'title': title
-        }
-        return render(self.request, "create-address.html", context)
-    def post(self, *args, **kwargs):
-        form = CreateAddressForm(self.request.POST or None)
-        if form.is_valid():
-            address_type = form.cleaned_data.get('address_type')
-            street_address = form.cleaned_data.get('street_address')
-            apartment_address = form.cleaned_data.get('apartment_address')
-            country = form.cleaned_data.get('country')
-            zipcode = form.cleaned_data.get('zipcode')
-            billing_address = BilingAddress(
-                    user = self.request.user,
-                    address_type=address_type,
-                    street_address=street_address,
-                    apartment_address=apartment_address,
-                    country=country,
-                    zipcode=zipcode
-            )
-            billing_address.save()
-            messages.info(self.request, "Your form has been submitted successfully")
-            return redirect('manage-address')
-        messages.warning(self.request, "Failed to update address")
-        return redirect('create-address')
+# class CreateAddress(CreateView):
+#     def get(self, *args, **kwargs):
+#         #form
+#         form = CreateAddressForm()
+#         title = 'Create'
+#         context = {
+#             'form': form,
+#             'title': title
+#         }
+#         return render(self.request, "create-address.html", context)
+#     def post(self, *args, **kwargs):
+#         form = CreateAddressForm(self.request.POST or None)
+#         if form.is_valid():
+#             address_type = form.cleaned_data.get('address_type')
+#             street_address = form.cleaned_data.get('street_address')
+#             apartment_address = form.cleaned_data.get('apartment_address')
+#             country = form.cleaned_data.get('country')
+#             zipcode = form.cleaned_data.get('zipcode')
+#             billing_address = BilingAddress(
+#                     user = self.request.user,
+#                     address_type=address_type,
+#                     street_address=street_address,
+#                     apartment_address=apartment_address,
+#                     country=country,
+#                     zipcode=zipcode
+#             )
+#             billing_address.save()
+#             messages.info(self.request, "Your form has been submitted successfully")
+#             return redirect('manage-address')
+#         messages.warning(self.request, "Failed to update address")
+#         return redirect('create-address')
     
 
+# class UpdateAddress(UpdateView):
+#     def get(self, *args, **kwargs):
+#         #form
+#         form = CreateAddressForm()
+#         address = get_object_or_404(BilingAddress, id=self.id)
+#         title = 'Update'
+#         context = {
+#             'form': form,
+#             'title': title,
+#             'address': address
+#         }
+#         return render(self.request, "create-address.html", context)
+#     def post(self, *args, **kwargs):
+#         form = CreateAddressForm(self.request.POST or None)
+#         if form.is_valid():
+#             address_type = form.cleaned_data.get('address_type')
+#             street_address = form.cleaned_data.get('street_address')
+#             apartment_address = form.cleaned_data.get('apartment_address')
+#             country = form.cleaned_data.get('country')
+#             zipcode = form.cleaned_data.get('zipcode')
+#             billing_address = BilingAddress(
+#                     user = self.request.user,
+#                     address_type=address_type,
+#                     street_address=street_address,
+#                     apartment_address=apartment_address,
+#                     country=country,
+#                     zipcode=zipcode
+#             )
+#             billing_address.save()
+#             messages.info(self.request, "Your form has been submitted successfully")
+#             return redirect('manage-address', kwargs={
+#                 'id': self.id
+#             })
+#         messages.warning(self.request, "Failed to update address")
+#         return redirect('create-address')
+    
+
+#create manage address function
+def address_create(request):
+    title = 'Create'
+    form = CreateAddressForm(request.POST or None)
+    if form.is_valid():
+        address_type = form.cleaned_data.get('address_type')
+        street_address = form.cleaned_data.get('street_address')
+        apartment_address = form.cleaned_data.get('apartment_address')
+        country = form.cleaned_data.get('country')
+        zipcode = form.cleaned_data.get('zipcode')
+        form = BilingAddress(
+                user = request.user,
+                address_type=address_type,
+                street_address=street_address,
+                apartment_address=apartment_address,
+                country=country,
+                zipcode=zipcode
+        )
+        form.save()
+        messages.info(request, "Your form has been submitted successfully")
+        return redirect('manage-address')
+    context = {
+        'form': form,
+        'title': title
+    }
+    return render(request, "create-address.html", context)
+
+#update manage address function
+def address_update(request, id):
+    title = 'Update'
+    address = get_object_or_404(BilingAddress, id=id)
+    form = CreateAddressForm(request.POST or None, request.FILES or None, instance=address)
+    if form.is_valid():
+        form.save()
+        messages.info(request, "Your address has been updated successfully")
+        return redirect('manage-address')
+    context = {
+        'form': form,
+        'title': title
+    }
+    return render(request, "create-address.html", context)
+
+
+def address_delete(request, id):
+    address = get_object_or_404(BilingAddress, id=id)
+    address.delete()
+    messages.info(request, "Your address has been delete successfully")
+    return redirect(reverse('manage-address'))

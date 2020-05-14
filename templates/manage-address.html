@@ -182,7 +182,9 @@
                                     <div class="osahan-user-media-body">
                                         <h6 class="mb-2">Dummy Name</h6>
                                         <p>dummy@gmail.com</p>
-                                        <a href="{% url 'profile' %}"><p>Update your profile</p></a>
+                                        <a href="{% url 'profile' %}">
+                                            <p>Update your profile</p>
+                                        </a>
                                     </div>
                                     {% endif %}
                                 </div>
@@ -242,12 +244,13 @@
                                                             <p class="text-black">
                                                                 {{ address.country.name }}-{{ address.zipcode }}</p>
                                                             <p class="mb-0 text-black font-weight-bold"><a
-                                                                    class="text-primary mr-3" data-toggle="modal"
-                                                                    data-target="#add-address-modal" href="#"><i
-                                                                        class="icofont-ui-edit"></i> EDIT</a> <a
-                                                                    class="text-danger" data-toggle="modal"
-                                                                    data-target="#delete-address-modal" href="#"><i
+                                                                style="color: blue;"
+                                                                href="{% url 'update-address' id=address.id %}"><i
+                                                                    class="icofont-ui-delete"></i> EDIT</a> <a
+                                                                    style="color: red;" class="confirm-delete"
+                                                                    href="{% url 'delete-address' id=address.id %}"><i
                                                                         class="icofont-ui-delete"></i> DELETE</a></p>
+                                                                        
                                                         </div>
                                                     </div>
                                                 </div>
@@ -262,7 +265,8 @@
                                         </div>
                                         {% endfor %}
                                         <div>
-                                            <a class="btn btn-primary" href="{% url 'create-address' %}">Add New Address</a>
+                                            <a class="btn btn-primary" href="{% url 'create-address' %}">Add New
+                                                Address</a>.
                                         </div>
                                     </div>
 

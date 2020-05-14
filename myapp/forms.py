@@ -1,6 +1,8 @@
 from django import forms
+from django.forms import ModelForm
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
+from .models import BilingAddress
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
@@ -33,7 +35,7 @@ class CheckoutForm(forms.Form):
     payment_option = forms.ChoiceField(widget=forms.RadioSelect, choices=PAYMENT_CHOICES)
 
 
-class CreateAddressForm(forms.Form):
+class CreateAddressForm(forms.ModelForm):
     address_type = forms.ChoiceField(widget=forms.Select(attrs={
         'class': 'custom-select d-block w-100',
         'id': 'address'
@@ -51,4 +53,12 @@ class CreateAddressForm(forms.Form):
     zipcode = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control'
     }))
+
+    class Meta:
+        model = BilingAddress
+        fields = (
+            'address_type', 'street_address','apartment_address', 'country', 'zipcode'
+        )
+
+        
     

@@ -122,4 +122,9 @@ class BilingAddress(models.Model):
     zipcode = models.CharField(max_length=10)
 
     def __str__(self):
-        return self.user.username
+        return self.user.username + ',' + self.street_address
+
+    def get_absolute_url(self):
+        return reverse('manage-address', kwargs={
+            'id': self.id
+        })
