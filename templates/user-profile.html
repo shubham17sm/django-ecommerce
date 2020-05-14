@@ -164,19 +164,18 @@
 
         <!--Card-->
         <div class="card">
-
+          
           <!--Card content-->
-          <form class="card-body">
-
+          <form class="card-body" method="POST" enctype="multipart/form-data">{% csrf_token %}
             <!--Grid row-->
             <div class="row">
 
               <!--Grid column-->
               <div class="col-md-6 mb-2">
-
                 <!--firstName-->
                 <div class="md-form ">
-                  <input type="text" id="firstName" class="form-control">
+                  <!-- <input type="text" id="firstName" class="form-control"> -->
+                  {{form.firstname}}
                   <label for="firstName" class="">First name</label>
                 </div>
 
@@ -188,8 +187,9 @@
 
                 <!--lastName-->
                 <div class="md-form">
-                  <input type="text" id="lastName" class="form-control">
+                  <!-- <input type="text" id="lastName" class="form-control"> -->
                   <label for="lastName" class="">Last name</label>
+                  {{ form.lastname }}
                 </div>
 
               </div>
@@ -208,16 +208,20 @@
 
             <!--email-->
             <div class="md-form mb-5">
-              <input type="text" id="email" class="form-control" placeholder="youremail@example.com">
+              <!-- <input type="text" id="email" class="form-control" placeholder="youremail@example.com"> -->
               <label for="email" class="">Email (optional)</label>
+              {{ form.email }}
             </div>
 
-            <div class="md-form mb-5">
-              <input id="Upload photo" name="Upload photo" class="input-file" type="file">
+            <!-- <div class="md-form mb-5">
               <label class="control-label" for="Upload photo">Upload photo</label>
+            </div> -->
+            <div class="md-form mb-5">
+              <!-- <input id="UploadPhoto" name="Upload photo" class="input-file" type="file"> -->
+              {{ form.profile_picture }}
             </div>
 
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+            <button class="btn btn-primary btn-lg btn-block" type="submit" value="submit">Update Profile</button>
 
           </form>
 
@@ -233,10 +237,10 @@
           <div>
             <div class="osahan-user text-center">
               <div class="osahan-user-media">
-                <img class="mb-3 rounded-pill shadow-sm mt-1" src="https://bootdey.com/img/Content/avatar/avatar7.png"
+                <img class="mb-3 rounded-pill shadow-sm mt-1" src="{{user.profile_picture.url}}"
                   alt="gurdeep singh osahan">
                 <div class="osahan-user-media-body">
-                  <h6 class="mb-2">{{ user.first_name }} {{ user.last_name }}</h6>
+                  <h6 class="mb-2">{{ user.firstname }} {{ user.lastname }}</h6>
                   <p class="mb-1">+91 85680-79956</p>
                   <p>{{ user.email }}</p>
                 </div>

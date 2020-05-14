@@ -8,7 +8,7 @@ from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone 
 from .models import Item, OrderItem, Order, BilingAddress, UserProfile
-from .forms import CheckoutForm, CreateAddressForm
+from .forms import CheckoutForm, CreateAddressForm, UserProfileForm
 
 # Create your views here.
 # def home_page(request):
@@ -18,11 +18,11 @@ from .forms import CheckoutForm, CreateAddressForm
 #     }
 #     return render(request, "home-page.html", context)
 
-def get_user_profile(user): 
-    queryset = UserProfile.objects.filter(user=user)
-    if queryset.exists():
-        return queryset[0]
-    return None
+# def get_user_profile(user): 
+#     queryset = UserProfile.objects.filter(user=user)
+#     if queryset.exists():
+#         return queryset[0]
+#     return None
 
 
 def search(request):
@@ -235,7 +235,17 @@ def remove_single_item_from_cart(request, slug):
     
 
 def profile_view(request):
-    return render(request, "user-profile.html", {})
+    user = get_object_or_404(UserProfile, user=request.user)
+    form = UserProfileForm(request.POST or None, request.FILES or None, instance=user)
+    if form.is_valid():
+        form.save()
+        messages.info(request, "Your Profile has been updated")
+        return redirect('profile')
+    context = {
+        'form': form,
+        'user': user
+    }
+    return render(request, "user-profile.html", context)
 
 
 def manage_address_view(request):
@@ -364,3 +374,15 @@ def address_delete(request, id):
     address.delete()
     messages.info(request, "Your address has been delete successfully")
     return redirect(reverse('manage-address'))
+
+# def user_profile(request):
+#     user = get_object_or_404(UserProfile, user=request.user)
+#     form = UserProfileForm(request.POST or None, instance=user)
+#     if form.is_valid():
+#         form.save()
+#         messages.info(request, "Your Profile has been updated")
+#         return redirect('profile')
+#     context = {
+#         'form': form
+#     }
+#     return render(request, "user-profile.html", context)

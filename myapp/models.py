@@ -31,7 +31,10 @@ ADDRESS_TYPE_CHOICES = (
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    profile_picture = models.ImageField(default='media/default_user.png')
+    firstname = models.CharField(max_length=120, null=True, blank=True)
+    lastname = models.CharField(max_length=120, null=True, blank=True)
+    email = models.EmailField(max_length=120, null=True, blank=True)
+    profile_picture = models.ImageField(default='default_user.png')
 
     def __str__(self):
         return self.user.username

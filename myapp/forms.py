@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
-from .models import BilingAddress
+from .models import BilingAddress, UserProfile
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
@@ -58,6 +58,27 @@ class CreateAddressForm(forms.ModelForm):
         model = BilingAddress
         fields = (
             'address_type', 'street_address','apartment_address', 'country', 'zipcode'
+        )
+
+
+class UserProfileForm(forms.ModelForm):
+    firstname = forms.CharField(required=False, widget=forms.TextInput(attrs={
+        'placeholder': 'Enter Firstname',
+        'id': 'firstName'
+    }))
+    lastname = forms.CharField(widget=forms.TextInput(attrs={
+        'id': 'lastname', 
+    }))
+    email = forms.EmailField(widget=forms.TextInput(attrs={
+        'id': 'email',
+        'placeholder': 'youremail@example.com', 
+    }))
+    profile_picture = forms.ImageField()
+
+    class Meta:
+        model = UserProfile
+        fields = (
+            'firstname', 'lastname','email', 'profile_picture'
         )
 
         
