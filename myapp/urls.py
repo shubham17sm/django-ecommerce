@@ -15,6 +15,7 @@ urlpatterns = [
     path('remove-single-item-from-cart/<slug>/', views.remove_single_item_from_cart, name='remove-single-item-from-cart'),
     # path('add-single-item-from-cart/<slug>/', views.add_single_item_from_cart, name='add-single-item-from-cart'),
     path('checkout/', views.CheckOutView.as_view(), name='checkout-page'),
+    path('payment/<payment_option>/', views.PaymentView.as_view(), name='payment'),
     path('manage-address/', views.manage_address_view, name='manage-address'),
     path('create-address/', views.address_create, name='create-address'),
     path('update-address/<id>/', views.address_update, name='update-address'),

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db.models import Q
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
@@ -7,8 +8,9 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone 
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment
 from .forms import CheckoutForm, CreateAddressForm, UserProfileForm
+
 
 # Create your views here.
 # def home_page(request):
@@ -23,6 +25,10 @@ from .forms import CheckoutForm, CreateAddressForm, UserProfileForm
 #     if queryset.exists():
 #         return queryset[0]
 #     return None
+
+import stripe
+stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+
 
 
 def search(request):
@@ -104,17 +110,91 @@ class CheckOutView(View):
                 billing_address.save()
                 order.billing_address = billing_address
                 order.save()
-                # ToDo : add redirect to the selected payment option
-                #remove below message anytime
-                messages.info(self.request, "Your form has been submitted successfully")
-                return redirect('checkout-page')
-            messages.warning(self.request, "Failed to checkout")
-            return redirect('checkout-page')
+
+                if payment_option == 'S':
+                    return redirect('payment', payment_option='stripe')
+                elif payment_option == 'P':
+                    return redirect('payment', payment_option='paypal')
+                else:
+                    messages.warning(self.request, "Failed to checkout")
+                    return redirect('checkout-page')
         except ObjectDoesNotExist: 
             messages.error(self.request, "You do not have an active order")
             return redirect('all-product-view')
 
-        
+class PaymentView(View):
+    def get(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        context = {
+            'object': order
+        }
+        return render(self.request, "payment.html", context)  
+    def post(self, *args, **kwargs):
+        order = Order.objects.get(user=self.request.user, ordered=False)
+        token = self.request.POST.get('stripeToken')
+        amount = int(order.get_total()* 100)
+
+
+        try:
+            charge = stripe.Charge.create(
+                amount=amount,
+                currency="inr",
+                source=token,
+            )
+            #create the payment
+            payment = Payment()
+            payment.stripe_charge_id = charge['id']
+            payment.user = self.request.user
+            payment.amount = order.get_total()
+            payment.save()
+
+            #assign the payment to the order
+            order.ordered = True
+            order.payment = payment
+            order.save()
+
+            messages.success(self.request, "Your order has been placed successfully")
+            return redirect('/')
+
+        except stripe.error.CardError as e:
+           body = e.json_body
+           err = body.get('error', {})
+           messages.error(self.request, f"{err.get('message')}")
+           return redirect('/')
+
+        except stripe.error.RateLimitError as e:
+            # Too many requests made to the API too quickly
+            messages.error(self.request, "Rate limit error")
+            return redirect('/')
+            
+
+        except stripe.error.InvalidRequestError as e:
+            # Invalid parameters were supplied to Stripe's API
+            messages.error(self.request, "Invalid request error")
+            return redirect('/')
+            
+
+        except stripe.error.AuthenticationError as e:
+            # Authentication with Stripe's API failed
+            # (maybe you changed API keys recently)
+            messages.error(self.request, "Not authenticated")
+            return redirect('/')
+
+        except stripe.error.APIConnectionError as e:
+            # Network communication with Stripe failed
+            messages.error(self.request, "API connection error")
+            return redirect('/')
+
+        except stripe.error.StripeError as e:
+            # Display a very generic error to the user, and maybe send
+            # yourself an email
+            messages.error(self.request, "Something went wrong")
+            return redirect('/')
+
+        except Exception as e:
+            # send email to ourself
+            messages.error(self.request, "Something went wrong! we are taking note of it")
+            return redirect('/')
 
 
 
@@ -250,8 +330,10 @@ def profile_view(request):
 
 def manage_address_view(request):
     qs = BilingAddress.objects.filter(user=request.user)
+    user = get_object_or_404(UserProfile, user=request.user)
     context = {
-        'qs': qs
+        'qs': qs,
+        'user': user
     }
     return render(request, "manage-address.html", context)
 
@@ -375,14 +457,3 @@ def address_delete(request, id):
     messages.info(request, "Your address has been delete successfully")
     return redirect(reverse('manage-address'))
 
-# def user_profile(request):
-#     user = get_object_or_404(UserProfile, user=request.user)
-#     form = UserProfileForm(request.POST or None, instance=user)
-#     if form.is_valid():
-#         form.save()
-#         messages.info(request, "Your Profile has been updated")
-#         return redirect('profile')
-#     context = {
-#         'form': form
-#     }
-#     return render(request, "user-profile.html", context)

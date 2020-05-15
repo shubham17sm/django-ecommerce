@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment
 # Register your models here.
 admin.site.register(OrderItem)
 admin.site.register(Order)
@@ -18,3 +18,10 @@ class ItemDisplayAdmin(admin.ModelAdmin):
     search_fields = ('title', 'category', 'description', 'slug')
 
 admin.site.register(Item, ItemDisplayAdmin)
+
+
+class PaymentAdminDisplay(admin.ModelAdmin):
+    list_display = ('user', 'stripe_charge_id', 'amount')
+    search_fields = ('user', 'stripe_charge_id')
+
+admin.site.register(Payment, PaymentAdminDisplay)
