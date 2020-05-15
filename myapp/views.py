@@ -27,7 +27,7 @@ from .forms import CheckoutForm, CreateAddressForm, UserProfileForm
 #     return None
 
 import stripe
-stripe.api_key = "sk_test_4eC39HqLyjWDarjtT1zdp7dc"
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 
@@ -132,6 +132,7 @@ class PaymentView(View):
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         token = self.request.POST.get('stripeToken')
+        #check again on amount line ..stripe doc for INR
         amount = int(order.get_total()* 100)
 
 
