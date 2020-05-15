@@ -66,10 +66,10 @@ class UserProfileForm(forms.ModelForm):
         'placeholder': 'Enter Firstname',
         'id': 'firstName'
     }))
-    lastname = forms.CharField(widget=forms.TextInput(attrs={
+    lastname = forms.CharField(required=False, widget=forms.TextInput(attrs={
         'id': 'lastname', 
     }))
-    email = forms.EmailField(widget=forms.TextInput(attrs={
+    email = forms.EmailField(required=False, widget=forms.TextInput(attrs={
         'id': 'email',
         'placeholder': 'youremail@example.com', 
     }))
