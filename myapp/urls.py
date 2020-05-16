@@ -21,6 +21,7 @@ urlpatterns = [
     path('update-address/<id>/', views.address_update, name='update-address'),
     path('delete-address/<id>/', views.address_delete, name='delete-address'),
     path('accounts/profile/', views.profile_view, name='profile'),
+    path('pervious-order/', views.PreviousOrderSummary.as_view(), name='previous-order'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),
 ]

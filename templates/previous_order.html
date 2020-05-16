@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %} Pervious orders {% endblock title %}
+
+{% block content %}
+<style type="text/css">
+  html,
+  body,
+  header,
+  .carousel {
+    height: 60vh;
+  }
+
+  @media (max-width: 740px) {
+
+    html,
+    body,
+    header,
+    .carousel {
+      height: 100vh;
+    }
+  }
+
+  @media (min-width: 800px) and (max-width: 850px) {
+
+    html,
+    body,
+    header,
+    .carousel {
+      height: 100vh;
+    }
+  }
+</style>
+
+
+<!--Main layout-->
+<main>
+  <div class="container">
+    <div class="table-responsive text-nowrap mt-4">
+      <h2>Previous orders</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Order No.</th>
+            <th scope="col">Address</th>
+            <th scope="col">Products</th>
+            <th scope="col">Ordered date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Transaction ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order_item in object %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ order_item.billing_address }}</td>
+            <td>
+                {% for item in order_item.items.all %}
+                {{item}}
+                {% endfor %}
+            </td>
+            <td>{{order_item.ordered_date|date}}</td>
+            <td>{{order_item.payment.amount}}</td>
+            <td>{{order_item.payment.stripe_charge_id}}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5"><b>You have not ordered anything yet</b></td>
+          </tr>
+          <tr>
+            <td colspan="5">
+              <a href="{% url 'all-product-view' %}" class="btn btn-warning float-right">Explore</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+</main>
+<!--Main layout-->
+
+{% endblock content %}

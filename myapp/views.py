@@ -71,6 +71,18 @@ class OrderSummaryView(LoginRequiredMixin, View):
             return redirect('/')
         
 
+class PreviousOrderSummary(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        try:
+            previous_order = Order.objects.filter(user=self.request.user, ordered=True)
+            context = {
+                'object': previous_order,
+            }
+            return render(self.request, 'previous_order.html', context)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "You have not ordered anything yet")
+            return redirect('/')
+
 
 class ItemDetailView(DetailView):
     model = Item

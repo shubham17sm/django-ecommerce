@@ -2,7 +2,6 @@ from django.contrib import admin
 from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment
 # Register your models here.
 admin.site.register(OrderItem)
-admin.site.register(Order)
 admin.site.register(UserProfile)
 
 
@@ -22,6 +21,12 @@ admin.site.register(Item, ItemDisplayAdmin)
 
 class PaymentAdminDisplay(admin.ModelAdmin):
     list_display = ('user', 'stripe_charge_id', 'amount')
-    search_fields = ('user', 'stripe_charge_id')
+    search_fields = ('user__username', 'stripe_charge_id')
 
 admin.site.register(Payment, PaymentAdminDisplay)
+
+
+class OrderAdminDisplay(admin.ModelAdmin):
+    list_display = ('user', 'ordered', 'billing_address')
+
+admin.site.register(Order, OrderAdminDisplay)
