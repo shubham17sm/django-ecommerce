@@ -41,6 +41,7 @@
         <thead>
           <tr>
             <th scope="col">Sr No.</th>
+            <th scope="col">Image</th>
             <th scope="col">Item Title</th>
             <th scope="col">Price</th>
             <th scope="col">Quantity</th>
@@ -51,6 +52,7 @@
           {% for order_item in object.items.all %}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
+            <td><img src="{{order_item.item.image.url}}" alt="order-image" style="width: 15%;"></td>
             <td>{{ order_item.item.title }}</td>
             <td>₹​{{ order_item.item.price }}</td>
             <td>
