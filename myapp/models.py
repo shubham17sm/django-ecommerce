@@ -81,7 +81,16 @@ class Item(models.Model):
         return reverse('remove-from-cart', kwargs={
             'slug': self.slug
         })
-        
+    
+    def get_add_to_wishlist_url(self):
+        return reverse('add-to-wishlist', kwargs={
+            'slug': self.slug
+        })
+
+    def get_remove_from_wishlist_url(self):
+        return reverse('remove-from-wishlist', kwargs={
+            'slug': self.slug
+        })
 
 class OrderItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -151,3 +160,32 @@ class Payment(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+#wishlisted products
+class WishlistedItem(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, blank=True, null=True)
+    wishlisted = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return f"{self.item.title}"
+
+
+class Wishlish(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    item = models.ManyToManyField(WishlistedItem)
+    wishlisted = models.BooleanField(default=False)
+    wishlisted_date = models.DateTimeField(auto_now_add=False)
+
+    def __str__(self):
+        return self.user.username
+
+
+#check in which area you service 
+class CheckZipcode(models.Model):
+    zipcode = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.zipcode

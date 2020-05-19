@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style type="text/css">
+  html,
+  body,
+  header,
+  .carousel {
+    height: 60vh;
+  }
+
+  @media (max-width: 740px) {
+
+    html,
+    body,
+    header,
+    .carousel {
+      height: 100vh;
+    }
+  }
+
+  @media (min-width: 800px) and (max-width: 850px) {
+
+    html,
+    body,
+    header,
+    .carousel {
+      height: 100vh;
+    }
+  }
+</style>
+
+
+<!--Main layout-->
+<main>
+  <div class="container">
+    <div class="table-responsive text-nowrap">
+      <h2>Your Wishlist </h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Sr No.</th>
+            <th scope="col">Image</th>
+            <th scope="col">Item Title</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order_item in wishlist.item.all %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td> <a href="{{ order_item.item.get_absolute_url }}"><img src="{{order_item.item.image.url}}"
+                  alt="order-image" style="width: 15%;"></a></td>
+            <td><a href="{{ order_item.item.get_absolute_url }}">{{ order_item.item.title }}</a></td>
+            <td>
+              {% if order_item.item.discount_price%}
+              <span class="mr-1">
+                <del>₹​{{ order_item.item.price }}</del>
+              </span>
+              <span>₹​{{ order_item.item.discount_price }}</span>
+              {% else %}
+              <span>₹​{{ order_item.item.price }}</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'add-to-cart' order_item.item.slug %}" class="btn btn-primary float-right">Add to cart</a>
+              <a style="color: red;" href="{% url 'remove-from-wishlist' order_item.item.slug %}" class="btn btn-danger">
+                <i class="fas fa-trash float-right" style="color: white;"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5"><b>Your wishlist is empty</b></td>
+          </tr>
+          <tr>
+            <td colspan="5">
+              <a href="{% url 'all-product-view' %}" class="btn btn-warning float-right">Back to shopping</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+
+  </div>
+</main>
+<!--Main layout-->
+
+{% endblock content %}

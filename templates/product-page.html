@@ -30,17 +30,21 @@
             </a>
           </div>
           <h2 class="font-weight-bold title">{{ object.title }}</h2>
+
+          <a href="{{ object.get_add_to_wishlist_url }}" style="float: right;" data-toggle="tooltip" data-placement="left" title="Add to wishlist">
+            <i class="fas fa-heart fa-3x ml-2"></i>
+          </a>
           <p class="lead">
             {% if object.discount_price%}
-              <span class="mr-1">
-                <del>₹​{{ object.price }}</del>
-              </span>
-              <span>₹​{{ object.discount_price }}</span>
+            <span class="mr-1">
+              <del>₹​{{ object.price }}</del>
+            </span>
+            <span>₹​{{ object.discount_price }}</span>
             {% else %}
-              <span>₹​{{ object.price }}</span>
+            <span>₹​{{ object.price }}</span>
             {% endif %}
           </p>
-          
+
 
           <p class="lead font-weight-bold">Description</p>
 
@@ -53,6 +57,19 @@
               <i class="fas fa-shopping-cart ml-1"></i>
             </button>
           </form> -->
+
+          <!-- Promo code -->
+          <form class="card p-2">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username"
+                aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Redeem</button>
+              </div>
+            </div>
+          </form>
+          <!-- Promo code -->
+
           <a href="{{ object.get_add_to_cart_url }}" class="btn btn-primary btn-md my-0 p">Add to cart
             <i class="fas fa-shopping-cart ml-1"></i>
           </a>

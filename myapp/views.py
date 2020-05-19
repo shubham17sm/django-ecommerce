@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone 
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish
 from .forms import CheckoutForm, CreateAddressForm, UserProfileForm
 
 
@@ -69,7 +69,20 @@ class OrderSummaryView(LoginRequiredMixin, View):
         except ObjectDoesNotExist: 
             messages.error(self.request, "You do not have an active order")
             return redirect('/')
+
         
+class WishlistView(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        try:
+            wishlist_qs = Wishlish.objects.get(user=self.request.user, wishlisted=False)
+            context = {
+                'wishlist': wishlist_qs
+            }
+            return render(self.request, 'wishlist.html', context)
+        except ObjectDoesNotExist: 
+            messages.error(self.request, "You have not added anything in wishlist yet")
+            return redirect('/')
+
 
 class PreviousOrderSummary(LoginRequiredMixin, View):
     def get(self, *args, **kwargs):
@@ -295,6 +308,61 @@ def remove_single_item_from_cart(request, slug):
         #add a message saying the user doesnt have an order
         messages.info(request, "You do not have an active order.")
         return redirect('product-page', slug=slug)
+
+
+#wishlist-add to wishlist
+@login_required
+def add_to_wishlist(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+    wishlist_item, created = WishlistedItem.objects.get_or_create(item=item, user=request.user, wishlisted=False)
+    wishlist_qs = Wishlish.objects.filter(user=request.user, wishlisted=False)
+    if wishlist_qs.exists():
+        wishlist = wishlist_qs[0]
+        #check if the order item is in the order
+        if wishlist.item.filter(item__slug=item.slug).exists():
+            wishlist_item.save()
+            messages.info(request, "This item was added to your wishlist.")
+        else:
+            messages.info(request, "This item was added to your wishlist.")
+            wishlist.item.add(wishlist_item)
+            return redirect('product-page', slug=slug)
+    else:
+        wishlisted_date = timezone.now()
+        wishlist = Wishlish.objects.create(user=request.user, wishlisted_date=wishlisted_date)
+        wishlist.item.add(wishlist_item)
+        messages.info(request, "This item was added to your wishlist.")
+        return redirect('product-page', slug=slug)
+    return redirect('product-page', slug=slug)
+
+
+#remove from wishlist view
+@login_required
+def remove_from_wishlist(request, slug):
+    item = get_object_or_404(Item, slug=slug)
+    wishlist_qs = Wishlish.objects.filter(
+        user=request.user, 
+        wishlisted=False
+    )
+    if wishlist_qs.exists():
+        wishlist = wishlist_qs[0]
+        #check if the order item is in the order
+        if wishlist.item.filter(item__slug=item.slug).exists():
+            wishlist_item = WishlistedItem.objects.filter(
+                item=item, 
+                user=request.user, 
+                wishlisted=False
+            )[0]
+            wishlist.item.remove(wishlist_item)
+            messages.info(request, "Removed from your wishlist.")
+            return redirect('wishlist-view')
+        else:
+            messages.info(request, "This item was not in your wishlist.")
+            return redirect('product-page', slug=slug) 
+    else:
+        #add a message saying the user doesnt have an order
+        messages.info(request, "You do not have an active product in your wishlist.")
+        return redirect('product-page', slug=slug)
+
 
 
 #add single item in the cart

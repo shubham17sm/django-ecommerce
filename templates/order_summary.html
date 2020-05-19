@@ -52,8 +52,8 @@
           {% for order_item in object.items.all %}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
-            <td><img src="{{order_item.item.image.url}}" alt="order-image" style="width: 15%;"></td>
-            <td>{{ order_item.item.title }}</td>
+            <td> <a href="{{ order_item.item.get_absolute_url }}"><img src="{{order_item.item.image.url}}" alt="order-image" style="width: 15%;"></a></td>
+            <td><a href="{{ order_item.item.get_absolute_url }}">{{ order_item.item.title }}</a></td>
             <td>₹​{{ order_item.item.price }}</td>
             <td>
               <a href="{% url 'remove-single-item-from-cart' order_item.item.slug %}"><i class="fas fa-minus mr-2"></i></a>
