@@ -7,9 +7,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView
-from django.utils import timezone 
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish, DiscountCode
-from .forms import CheckoutForm, CreateAddressForm, UserProfileForm, DiscountForm
+from django.utils import timezone
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish, DiscountCode, CheckZipcode
+from .forms import CheckoutForm, CreateAddressForm, UserProfileForm, DiscountForm, CheckZipcodeForm
 
 
 # Create your views here.
@@ -100,6 +100,11 @@ class PreviousOrderSummary(LoginRequiredMixin, View):
 class ItemDetailView(DetailView):
     model = Item
     template_name = "product-page.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ItemDetailView, self).get_context_data(**kwargs)
+        context['zipcodeform'] = CheckZipcodeForm()
+        return context
 
 
 class CheckOutView(View):
@@ -574,4 +579,31 @@ class DiscountCodeView(View):
             except ObjectDoesNotExist:
                 messages.warning(self.request, "You do not have any active order")
                 return redirect('checkout-page')
+        else:
+            messages.warning(self.request, "Promo code does not exists")
+            return redirect('checkout-page')
 
+
+def get_zipcode(request, zipcode):
+    try:
+        checkzip_qs = CheckZipcode.objects.get(zipcode=zipcode)
+        messages.success(request, "This product is available at your location")
+        return zipcode
+    except ObjectDoesNotExist:
+        messages.warning(request, "This product is not available at your location")
+        return redirect('/')
+
+
+class CheckZipcodeView(View):
+    def post(self, *args, **kwargs):
+        form = CheckZipcodeForm(self.request.POST or None)
+        if form.is_valid():
+            try:
+                zipcode = form.cleaned_data.get('zipcode')
+                checkzip_qs = get_zipcode(self.request, zipcode)
+                return redirect('/')
+            except ObjectDoesNotExist:
+                return redirect('/')
+
+
+        

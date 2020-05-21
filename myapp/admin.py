@@ -41,7 +41,7 @@ admin.site.register(CheckZipcode, CheckZipcodeForDelivery)
 
 
 class DiscountCodeAdmin(admin.ModelAdmin):
-    list_display = ('promo_code', 'description')
+    list_display = ('promo_code', 'amount', 'description')
     search_fields = ('promo_code',)
 
 admin.site.register(DiscountCode, DiscountCodeAdmin)

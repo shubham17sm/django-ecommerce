@@ -26,6 +26,7 @@ urlpatterns = [
     path('accounts/profile/', views.profile_view, name='profile'),
     path('pervious-order/', views.PreviousOrderSummary.as_view(), name='previous-order'),
     path('discount-code/', views.DiscountCodeView.as_view(), name='discount-code'),
+    path('check-zipcode/', views.CheckZipcodeView.as_view(), name='check-zipcode'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),
 ]

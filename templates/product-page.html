@@ -2,7 +2,16 @@
 {% load static %}
 
 {% block content %}
+<style>
+  .card {
+    font-weight: 400;
+    border: 0;
+    width: 50%;
+    margin-left: 100px;
+    margin-bottom: 15px;
+}
 
+</style>
 <!--Main layout-->
 <main class="mt-5 pt-4">
   <div class="container dark-grey-text mt-5">
@@ -59,12 +68,13 @@
           </form> -->
 
           <!-- Promo code -->
-          <form class="card p-2" method="POST">{% csrf_token %}
+          <form class="card p-2" method="POST" action="{% url 'check-zipcode' %}">{% csrf_token %}
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Promo code" aria-label="Recipient's username"
-                aria-describedby="basic-addon2">
+              <!-- <input type="text" class="form-control" placeholder="Check Zipcode" aria-label="zipcode"
+                aria-describedby="basic-addon2"> -->
+                {{ zipcodeform.zipcode }}
               <div class="input-group-append">
-                <button class="btn btn-secondary btn-md waves-effect m-0" type="button">Check</button>
+                <button class="btn btn-secondary btn-md waves-effect m-0" type="submit">Check</button>
               </div>
             </div>
           </form>

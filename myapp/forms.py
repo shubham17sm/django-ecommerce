@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
-from .models import BilingAddress, UserProfile, DiscountCode
+from .models import BilingAddress, UserProfile, DiscountCode, CheckZipcode
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
@@ -86,5 +86,13 @@ class DiscountForm(forms.Form):
         'class': 'form-control',
         'placeholder': 'Promo code',
         'aria-label': "Recipient's username",
+        'aria-describedby': 'basic-addon2'
+    }))
+
+class CheckZipcodeForm(forms.Form):
+    zipcode = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Check zipcode for delivery',
+        'aria-label': 'zipcode checker',
         'aria-describedby': 'basic-addon2'
     }))
