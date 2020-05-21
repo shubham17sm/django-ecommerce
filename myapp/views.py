@@ -8,8 +8,8 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone 
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish
-from .forms import CheckoutForm, CreateAddressForm, UserProfileForm
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish, DiscountCode
+from .forms import CheckoutForm, CreateAddressForm, UserProfileForm, DiscountForm
 
 
 # Create your views here.
@@ -109,7 +109,9 @@ class CheckOutView(View):
         order = Order.objects.get(user=self.request.user, ordered=False)
         context = {
             'form': form,
-            'object': order
+            'object': order,
+            'discountform': DiscountForm(),
+            'DISPLAY_COUPON_FORM': True
         }
         return render(self.request, "checkout-page.html", context)
     def post(self, *args, **kwargs):
@@ -144,16 +146,21 @@ class CheckOutView(View):
                     messages.warning(self.request, "Failed to checkout")
                     return redirect('checkout-page')
         except ObjectDoesNotExist: 
-            messages.error(self.request, "You do not have an active order")
+            messages.warning(self.request, "You do not have an active order")
             return redirect('all-product-view')
 
 class PaymentView(View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
-        context = {
-            'object': order
-        }
-        return render(self.request, "payment.html", context)  
+        if order.billing_address:
+            context = {
+                'object': order,
+                'DISPLAY_COUPON_FORM': False
+            }
+            return render(self.request, "payment.html", context) 
+        else:
+            messages.warning(self.request, "You have not entered billing address")
+            return redirect('checkout-page')
     def post(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         token = self.request.POST.get('stripeToken')
@@ -175,6 +182,11 @@ class PaymentView(View):
             payment.save()
 
             #assign the payment to the order
+            order_items = order.items.all()
+            order_items.update(ordered=True)
+            for item in order_items:
+                item.save()
+
             order.ordered = True
             order.payment = payment
             order.save()
@@ -537,4 +549,29 @@ def address_delete(request, id):
     address.delete()
     messages.info(request, "Your address has been delete successfully")
     return redirect(reverse('manage-address'))
+
+
+def get_coupon(request, promo_code):
+    try:
+        coupon = DiscountCode.objects.get(promo_code=promo_code)
+        return coupon
+    except ObjectDoesNotExist:
+        messages.warning(request, "Promo code does not exists")
+        return redirect('checkout-page')
+
+
+class DiscountCodeView(View):
+    def post(self, *args, **kwargs):
+        form = DiscountForm(self.request.POST or None)
+        if form.is_valid():
+            try:
+                promo_code = form.cleaned_data.get('promo_code')
+                order = Order.objects.get(user = self.request.user, ordered = False)
+                order.coupon = get_coupon(self.request, promo_code)
+                order.save()
+                messages.success(self.request, "Successfully applied coupon")
+                return redirect('checkout-page')
+            except ObjectDoesNotExist:
+                messages.warning(self.request, "You do not have any active order")
+                return redirect('checkout-page')
 

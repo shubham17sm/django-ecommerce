@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, CheckZipcode, WishlistedItem, Wishlish
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, CheckZipcode, WishlistedItem, Wishlish, DiscountCode
 # Register your models here.
 admin.site.register(OrderItem)
 admin.site.register(UserProfile)
@@ -38,3 +38,10 @@ class CheckZipcodeForDelivery(admin.ModelAdmin):
     search_fields = ('zipcode',)
 
 admin.site.register(CheckZipcode, CheckZipcodeForDelivery)
+
+
+class DiscountCodeAdmin(admin.ModelAdmin):
+    list_display = ('promo_code', 'description')
+    search_fields = ('promo_code',)
+
+admin.site.register(DiscountCode, DiscountCodeAdmin)

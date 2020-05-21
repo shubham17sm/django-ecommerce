@@ -25,6 +25,7 @@ urlpatterns = [
     path('delete-address/<id>/', views.address_delete, name='delete-address'),
     path('accounts/profile/', views.profile_view, name='profile'),
     path('pervious-order/', views.PreviousOrderSummary.as_view(), name='previous-order'),
+    path('discount-code/', views.DiscountCodeView.as_view(), name='discount-code'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),
 ]

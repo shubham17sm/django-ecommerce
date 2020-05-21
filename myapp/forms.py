@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm
 from django_countries.fields import CountryField
 from django_countries.widgets import CountrySelectWidget
-from .models import BilingAddress, UserProfile
+from .models import BilingAddress, UserProfile, DiscountCode
 
 PAYMENT_CHOICES = (
     ('S', 'Stripe'),
@@ -81,5 +81,10 @@ class UserProfileForm(forms.ModelForm):
             'firstname', 'lastname','email', 'profile_picture'
         )
 
-        
-    
+class DiscountForm(forms.Form):
+    promo_code = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control',
+        'placeholder': 'Promo code',
+        'aria-label': "Recipient's username",
+        'aria-describedby': 'basic-addon2'
+    }))
