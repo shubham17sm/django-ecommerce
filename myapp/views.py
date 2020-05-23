@@ -583,6 +583,13 @@ class DiscountCodeView(View):
             messages.warning(self.request, "Promo code does not exists")
             return redirect('checkout-page')
 
+#ToDo
+def remove_coupon(request):
+    order = Order.objects.get(user=request.user, ordered=False)
+    order.coupon.delete()
+    messages.warning(request, "Promo has been removed")
+    return redirect('checkout-page')
+
 
 def get_zipcode(request, zipcode):
     try:
@@ -604,6 +611,3 @@ class CheckZipcodeView(View):
                 return redirect('/')
             except ObjectDoesNotExist:
                 return redirect('/')
-
-
-        

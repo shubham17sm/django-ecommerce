@@ -35,6 +35,9 @@
             </div>
             <span class="text-success">-₹{{ object.coupon.amount }}</span>
         </li>
+        <li class="list-group-item d-flex justify-content-between bg-light">
+            <a href="{% url 'remove-code' %}" class="btn btn-danger">Remove</a>
+        </li>
         <li class="list-group-item d-flex justify-content-between">
             <span>Total (INR)</span>
             <strong>₹​{{ object.get_total }}</strong>
