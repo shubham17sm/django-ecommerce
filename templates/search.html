@@ -111,9 +111,11 @@
               <!--Card content-->
               <div class="card-body text-center">
                 <!--Category & Title-->
-                <a href="" class="grey-text">
-                  <h5>{{ item.category }}</h5>
+                {% for cat in item.category.all %}
+                <a href="/cat/{{ cat.slug }}" class="grey-text">
+                  <h5>{{ cat}}</h5>
                 </a>
+                {% endfor %}
                 <h5>
                   <strong>
                     <a href="{{ item.get_absolute_url }}" class="dark-grey-text">{{ item.title }}

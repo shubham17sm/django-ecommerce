@@ -36,7 +36,8 @@ def search(request):
     query = request.GET.get('q')
     if query:
         queryset = queryset.filter(
-            Q(title__icontains=query)
+            Q(title__icontains=query) |
+            Q(category__title__icontains=query)
         ).distinct()
     context = {
         'queryset': queryset
@@ -54,7 +55,7 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        context['category'] = Category.objects.all()
+        context['category'] = Category.objects.all()[:5]
         return context
 
 
