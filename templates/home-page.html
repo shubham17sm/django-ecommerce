@@ -200,15 +200,11 @@
                 <span class="sr-only">(current)</span>
               </a>
             </li>
+            {% for cat in category %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Shirts</a>
+              <a class="nav-link" href="/cat/{{ cat.slug }}">{{ cat.title }}</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Sport wears</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Outwears</a>
-            </li>
+            {% endfor %}
 
           </ul>
           <!-- Links -->
@@ -252,8 +248,8 @@
               <!--Card content-->
               <div class="card-body text-center">
                 <!--Category & Title-->
-                {% for cat in item.category.all%}
-                <a href="" class="grey-text">
+                {% for cat in item.category.all %}
+                <a href="/cat/{{ cat.slug }}" class="grey-text">
                   <h5>{{ cat }}</h5>
                 </a>
                 {% endfor %}

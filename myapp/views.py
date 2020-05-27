@@ -52,6 +52,11 @@ class HomeView(ListView):
     paginate_by = 4
     template_name = "home-page.html"
 
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        context['category'] = Category.objects.all()
+        return context
+
 
 class AllProductView(ListView):
     model = Item
