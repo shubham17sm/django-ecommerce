@@ -5,11 +5,11 @@ from django_countries.fields import CountryField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-CATEGORY_CHOICES = (
-    ('S', 'Shirt'),
-    ('SW', 'Sport wear'),
-    ('OW', 'Outwear')
-)
+# CATEGORY_CHOICES = (
+#     ('S', 'Shirt'),
+#     ('SW', 'Sport wear'),
+#     ('OW', 'Outwear')
+# )
 
 LABEL_CHOICES = (
     ('P', 'primary'),
@@ -29,6 +29,16 @@ ADDRESS_TYPE_CHOICES = (
     ('Office', 'Office'),
     ('Other', 'Other')
 )
+
+
+class Category(models.Model):
+    title = models.CharField(max_length=40)
+    slug = models.SlugField()
+
+    def __str__(self):
+        return self.title
+
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -56,7 +66,8 @@ class Item(models.Model):
     price = models.FloatField()
     image = models.ImageField()
     discount_price = models.FloatField(blank=True, null=True)
-    category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    # category = models.CharField(choices=CATEGORY_CHOICES, max_length=2)
+    category = models.ManyToManyField(Category)
     label = models.CharField(choices=LABEL_CHOICES, max_length=1, blank=True, null=True)
     label_name = models.CharField(choices=LABEL_NAME_CHOICES, max_length=1, blank=True, null=True)
     slug = models.SlugField()
@@ -66,6 +77,7 @@ class Item(models.Model):
 
     def __str__(self):
         return self.title
+
 
     def get_absolute_url(self):
         return reverse('product-page', kwargs={

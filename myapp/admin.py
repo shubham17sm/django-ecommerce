@@ -1,10 +1,11 @@
 from django.contrib import admin
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, CheckZipcode, WishlistedItem, Wishlish, DiscountCode
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, CheckZipcode, WishlistedItem, Wishlish, DiscountCode, Category
 # Register your models here.
 admin.site.register(OrderItem)
 admin.site.register(UserProfile)
 admin.site.register(WishlistedItem)
 admin.site.register(Wishlish)
+admin.site.register(Category)
 
 
 class BilingAddressAdmin(admin.ModelAdmin):
@@ -14,7 +15,7 @@ admin.site.register(BilingAddress, BilingAddressAdmin)
 
 
 class ItemDisplayAdmin(admin.ModelAdmin):
-    list_display = ('title', 'category', 'list_on_frontpage')
+    list_display = ('title', 'list_on_frontpage')
     list_filter = ('category',)
     search_fields = ('title', 'category', 'description', 'slug')
 

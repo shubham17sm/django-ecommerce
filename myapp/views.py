@@ -8,7 +8,7 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish, DiscountCode, CheckZipcode
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish, DiscountCode, CheckZipcode, Category
 from .forms import CheckoutForm, CreateAddressForm, UserProfileForm, DiscountForm, CheckZipcodeForm
 
 
@@ -611,3 +611,15 @@ class CheckZipcodeView(View):
                 return redirect('/')
             except ObjectDoesNotExist:
                 return redirect('/')
+
+
+#filter item by category
+def item_by_category(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    item = Item.objects.filter(category=category)
+    context = {
+        'category':category,
+        'items': item
+    }
+    return render(request, "item_by_cat.html", context)
+

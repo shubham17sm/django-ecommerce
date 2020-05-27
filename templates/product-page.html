@@ -34,9 +34,11 @@
         <div class="p-4">
 
           <div class="mb-3">
+            {% for cat in item.category.all%}
             <a href="">
-              <span class="badge purple mr-1">{{object.get_category_display}}</span>
+              <span class="badge purple mr-1">{{ cat }}</span>
             </a>
+            {% endfor %}
           </div>
           <h2 class="font-weight-bold title">{{ object.title }}</h2>
 
