@@ -139,9 +139,10 @@ class Order(models.Model):
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('DiscountCode', on_delete=models.SET_NULL, blank=True, null=True)
     in_transit = models.BooleanField(default=False)
-    Shipped = models.BooleanField(default=False)
+    shipped = models.BooleanField(default=False)
     out_for_delivery = models.BooleanField(default=False)
     delivered = models.BooleanField(default=False)
+    returned = models.BooleanField(default=False)
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
 
