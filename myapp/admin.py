@@ -1,11 +1,34 @@
 from django.contrib import admin
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, CheckZipcode, WishlistedItem, Wishlish, DiscountCode, Category
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, CheckZipcode, WishlistedItem, Wishlish, DiscountCode, Category, Refund
 # Register your models here.
 admin.site.register(OrderItem)
 admin.site.register(UserProfile)
 admin.site.register(WishlistedItem)
 admin.site.register(Wishlish)
 admin.site.register(Category)
+admin.site.register(Refund)
+
+def make_refund_accepted(modeladmin, request, queryset):
+    queryset.update(refund_requested=False, refund_granted=True)
+
+make_refund_accepted.short_description = 'Update orders to refund granted'
+
+def make_order_is_shipped(modeladmin, request, queryset):
+    queryset.update(in_transit=False, Shipped=True)
+
+make_order_is_shipped.short_description = 'Update order from in transit to shipped'
+
+
+def make_order_is_out_for_delivery(modeladmin, request, queryset):
+    queryset.update(Shipped=False, out_for_delivery=True)
+
+make_order_is_out_for_delivery.short_description = 'Update order shipped to out for delivery'
+
+
+def make_order_is_delivered(modeladmin, request, queryset):
+    queryset.update(out_for_delivery=False, delivered=True)
+
+make_order_is_delivered.short_description = 'Update order out for delivery to delivered'
 
 
 class BilingAddressAdmin(admin.ModelAdmin):
@@ -30,7 +53,31 @@ admin.site.register(Payment, PaymentAdminDisplay)
 
 
 class OrderAdminDisplay(admin.ModelAdmin):
-    list_display = ('user', 'ordered', 'billing_address')
+    list_display = ('user',
+                    'order_id',
+                    'ordered', 
+                    'billing_address', 
+                    'payment',
+                    'coupon',
+                    'in_transit',
+                    'Shipped',
+                    'out_for_delivery',
+                    'delivered',
+                    'refund_requested',
+                    'refund_granted')
+    list_display_links = ('user',
+                            'billing_address',
+                            'payment',
+                            'coupon')
+    list_filter = ('ordered', 
+                    'in_transit',
+                    'Shipped',
+                    'out_for_delivery',
+                    'delivered',
+                    'refund_requested',
+                    'refund_granted')
+    search_fields = ('user__username', 'order_id')
+    actions = [make_refund_accepted, make_order_is_shipped, make_order_is_out_for_delivery, make_order_is_delivered]
 
 admin.site.register(Order, OrderAdminDisplay)
 

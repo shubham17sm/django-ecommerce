@@ -8,9 +8,11 @@ from django.shortcuts import render, get_object_or_404, redirect, reverse
 from django.views.generic import ListView, DetailView, View
 from django.views.generic.edit import CreateView, UpdateView
 from django.utils import timezone
-from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish, DiscountCode, CheckZipcode, Category
-from .forms import CheckoutForm, CreateAddressForm, UserProfileForm, DiscountForm, CheckZipcodeForm
+from .models import Item, OrderItem, Order, BilingAddress, UserProfile, Payment, WishlistedItem, Wishlish, DiscountCode, CheckZipcode, Category, Refund
+from .forms import CheckoutForm, CreateAddressForm, UserProfileForm, DiscountForm, CheckZipcodeForm, RequestRefundForm
 
+import random
+import string 
 
 # Create your views here.
 # def home_page(request):
@@ -29,6 +31,9 @@ from .forms import CheckoutForm, CreateAddressForm, UserProfileForm, DiscountFor
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
+
+def create_order_id():
+    return ''.join(random.choices(string.ascii_lowercase + string.digits, k=20))
 
 
 def search(request):
@@ -200,6 +205,7 @@ class PaymentView(View):
 
             order.ordered = True
             order.payment = payment
+            order.order_id = create_order_id()
             order.save()
 
             messages.success(self.request, "Your order has been placed successfully")
@@ -629,3 +635,36 @@ def item_by_category(request, slug):
     }
     return render(request, "item_by_cat.html", context)
 
+
+class RequestRefundView(View):
+    def get(self, *args, **kwargs):
+        form = RequestRefundForm()
+        context = {
+            'form': form
+        }
+        return render(self.request, "refund_request.html", context)
+
+    def post(self, *args, **kwargs):
+        form = RequestRefundForm(self.request.POST)
+        if form.is_valid():
+            order_id = form.cleaned_data.get('order_id')
+            message = form.cleaned_data.get('message')
+            email = form.cleaned_data.get('email')
+            try:
+                order = Order.objects.get(order_id=order_id)
+                order.refund_requested = True
+                order.save()
+
+                #store the refund
+                refund = Refund()
+                refund.order = order
+                refund.reason = message
+                refund.email = email
+                refund.save()
+
+                messages.info(self.request, "Your request has been submitted and our team will get in contact with you")
+                return redirect('refund-view')
+
+            except ObjectDoesNotExist:
+                messages.warning(self.request, "This order does not exists")
+                return redirect('refund-view')

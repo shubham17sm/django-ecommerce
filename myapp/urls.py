@@ -29,6 +29,7 @@ urlpatterns = [
     path('remove-code/', views.remove_coupon, name='remove-code'),
     path('check-zipcode/', views.CheckZipcodeView.as_view(), name='check-zipcode'),
     path('cat/<slug>/', views.item_by_category, name='item-by-category'),
+    path('refund-request/', views.RequestRefundView.as_view(), name='refund-view'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),
 ]

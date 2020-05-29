@@ -130,6 +130,7 @@ class OrderItem(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order_id = models.CharField(max_length=50)
     items = models.ManyToManyField(OrderItem)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
@@ -137,7 +138,17 @@ class Order(models.Model):
     billing_address = models.ForeignKey('BilingAddress', on_delete=models.SET_NULL, blank=True, null=True)
     payment = models.ForeignKey('Payment', on_delete=models.SET_NULL, blank=True, null=True)
     coupon = models.ForeignKey('DiscountCode', on_delete=models.SET_NULL, blank=True, null=True)
+    in_transit = models.BooleanField(default=False)
+    Shipped = models.BooleanField(default=False)
+    out_for_delivery = models.BooleanField(default=False)
+    delivered = models.BooleanField(default=False)
+    refund_requested = models.BooleanField(default=False)
+    refund_granted = models.BooleanField(default=False)
 
+    '''
+    being_delivered: in_transit
+    recieved : Shipped
+    '''
     def __str__(self):
         return self.user.username
 
@@ -214,3 +225,13 @@ class DiscountCode(models.Model):
 
     def __str__(self):
         return self.promo_code
+
+
+class Refund(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    reason = models.TextField()
+    refund_accepted = models.BooleanField(default=False)
+    email = models.EmailField()
+
+    def __str__(self):
+        return f"{self.pk}"

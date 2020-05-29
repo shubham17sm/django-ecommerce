@@ -28,6 +28,7 @@
             </span>
         </li>
         {% endfor %}
+        {% if object.coupon %}
         <li class="list-group-item d-flex justify-content-between bg-light">
             <div class="text-success">
                 <h6 class="my-0">Promo code</h6>
@@ -36,8 +37,10 @@
             <span class="text-success">-₹{{ object.coupon.amount }}</span>
         </li>
         <li class="list-group-item d-flex justify-content-between bg-light">
-            <a href="{% url 'remove-code' %}" class="btn btn-danger">Remove</a>
+            <a href="{% url 'remove-code' %}" class="btn btn-danger" style="padding: 4px;
+            border-radius: 5px;">Remove</a>
         </li>
+        {% endif %}
         <li class="list-group-item d-flex justify-content-between">
             <span>Total (INR)</span>
             <strong>₹​{{ object.get_total }}</strong>
