@@ -31,6 +31,7 @@ urlpatterns = [
     path('cat/<slug>/', views.item_by_category, name='item-by-category'),
     path('refund-request/', views.RequestRefundView.as_view(), name='refund-view'),
     path('my-active-order/', views.MyActiveOrderSummary.as_view(), name='my-active-order'),
+    path('cancel-order/<id>/', views.cancel_order, name='cancel-order'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),
 ]

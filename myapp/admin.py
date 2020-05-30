@@ -70,8 +70,9 @@ class OrderAdminDisplay(admin.ModelAdmin):
                     'out_for_delivery',
                     'delivered',
                     'returned',
+                    'canceled',
                     'refund_requested',
-                    'refund_granted')
+                    'refund_granted',)
     list_display_links = ('user',
                             'billing_address',
                             'payment',
@@ -82,6 +83,7 @@ class OrderAdminDisplay(admin.ModelAdmin):
                     'out_for_delivery',
                     'delivered',
                     'returned',
+                    'canceled',
                     'refund_requested',
                     'refund_granted')
     search_fields = ('user__username', 'order_id')

@@ -145,11 +145,9 @@ class Order(models.Model):
     returned = models.BooleanField(default=False)
     refund_requested = models.BooleanField(default=False)
     refund_granted = models.BooleanField(default=False)
+    canceled = models.BooleanField(default=False)
 
-    '''
-    being_delivered: in_transit
-    recieved : Shipped
-    '''
+
     def __str__(self):
         return self.user.username
 

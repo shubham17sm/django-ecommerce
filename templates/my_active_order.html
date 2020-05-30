@@ -85,6 +85,10 @@
               None
               {% endif %}
             </td>
+            <td>
+              <a href="{% url 'cancel-order' id=order_item.id %}" class="btn btn-danger float-right confirm-cancel" style="padding: 5px;
+              border-radius: 6px;">cancel</a>
+            </td>
           </tr>
           {% elif order_item.shipped == True%}
           <tr>
@@ -118,6 +122,10 @@
               None
               {% endif %}
             </td>
+            <td>
+              <a href="{% url 'cancel-order' id=order_item.id %}" class="btn btn-danger float-right confirm-cancel" style="padding: 5px;
+              border-radius: 6px;">cancel</a>
+            </td>
           </tr>
           {% elif order_item.out_for_delivery == True %}
           <tr>
@@ -150,6 +158,10 @@
               {% else %}
               None
               {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'cancel-order' id=order_item.id %}" class="btn btn-danger float-right confirm-cancel" style="padding: 5px;
+              border-radius: 6px;">cancel</a>
             </td>
           </tr>
           {% endif %}

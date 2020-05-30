@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect, reverse
@@ -179,6 +180,24 @@ class CheckOutView(View):
             messages.warning(self.request, "You do not have an active order")
             return redirect('all-product-view')
 
+
+def cancel_order(request, id):
+    order = Order.objects.get(user=request.user, ordered=True, id=id)
+    try:
+        order.in_transit = False
+        order.shipped = False
+        order.out_for_delivery = False
+        order.delivered = False
+        order.canceled = True
+        order.save()
+
+        messages.success(request, "Your order has been canceled")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    except ObjectDoesNotExist:
+        messages.warning(request, "Order does not found")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
 class PaymentView(View):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
@@ -352,6 +371,7 @@ def remove_single_item_from_cart(request, slug):
         #add a message saying the user doesnt have an order
         messages.info(request, "You do not have an active order.")
         return redirect('product-page', slug=slug)
+
 
 
 #wishlist-add to wishlist

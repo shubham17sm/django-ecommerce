@@ -43,6 +43,7 @@
           <tr>
             <th scope="col">Sr No.</th>
             <th scope="col">Order Id</th>
+            <th scope="col">Item image</th>
             <th scope="col">Address</th>
             <th scope="col">Products</th>
             <th scope="col">Ordered date</th>
@@ -57,6 +58,11 @@
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td scope="row">{{ order_item.order_id }}</td>
+            <td scope="row">
+            {% for order_item in order_item.items.all %}
+              <a href="{{ order_item.item.get_absolute_url }}"><img src="{{order_item.item.image.url}}" alt="order-image" style="width: 100%;"></a>
+            {% endfor %}
+          </td>
             <td>{{ order_item.billing_address }}</td>
             <td>
                 {% for item in order_item.items.all %}
@@ -86,7 +92,10 @@
               {% endif %}
             </td>
             <td>
-              <a href="{% url 'refund-view' %}" class="btn btn-warning float-right">Refund</a>
+              <a href="{% url 'refund-view' %}" class="btn btn-warning float-right" style="padding: 5px;
+              border-radius: 6px;">Refund</a>
+              <a href="{% url 'cancel-order' id=order_item.id %}" class="btn btn-danger float-right confirm-cancel" style="padding: 5px;
+              border-radius: 6px;">cancel</a>
             </td>
           </tr>
           {% elif order_item.returned == True %}
@@ -183,6 +192,41 @@
               Refund request inprogress
               {% elif order_item.refund_granted == True %}
               Refunded 
+              {% else %}
+              None
+              {% endif %}
+            </td>
+          </tr>
+          {% elif order_item.canceled == True %}
+          <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td scope="row">{{ order_item.order_id }}</td>
+            <td>{{ order_item.billing_address }}</td>
+            <td>
+                {% for item in order_item.items.all %}
+                {{item}}
+                {% endfor %}
+            </td>
+            <td>{{order_item.ordered_date|date}}</td>
+            <td>{{order_item.payment.amount}}</td>
+            <td>{{order_item.payment.stripe_charge_id}}</td>
+            <td>
+              {% if order_item.in_transit == True %}
+              In Transit
+              {% elif order_item.shipped == True %}
+              Shipped
+              {% elif order_item.out_for_delivery == True %}
+              Out for delivery
+              {% elif order_item.delivered == True %}
+              Delivered
+              {% elif order_item.returned == True %}
+              Returned
+              {% elif order_item.refund_requested == True %}
+              Refund request inprogress
+              {% elif order_item.refund_granted == True %}
+              Refunded
+              {% elif order_item.canceled == True %} 
+              Canceled
               {% else %}
               None
               {% endif %}
