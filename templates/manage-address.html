@@ -238,7 +238,11 @@
                                                         <div class="mr-3"><i class="icofont-briefcase icofont-3x"></i>
                                                         </div>
                                                         <div class="media-body">
-                                                            <h6 class="mb-1">{{ address.address_type }}</h6>
+                                                            <h6 class="mb-1">{{ address.address_type }} 
+                                                                {% if address.default_address == True %} 
+                                                                    (Default address)
+                                                                    {%endif%}
+                                                                </h6>
                                                             <p>{{ address.street_address }} ,
                                                                 {{ address.apartment_address }}</p>
                                                             <p class="text-black">

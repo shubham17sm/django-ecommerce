@@ -37,7 +37,7 @@
 <main>
   <div class="container">
     <div class="table-responsive text-nowrap mt-4">
-      <h2>Previous orders</h2>
+      <h2>Active order summary</h2>
       <table class="table">
         <thead>
           <tr>
@@ -53,43 +53,7 @@
         </thead>
         <tbody>
           {% for order_item in object %}
-          {% if order_item.delivered == True %}
-          <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td scope="row">{{ order_item.order_id }}</td>
-            <td>{{ order_item.billing_address }}</td>
-            <td>
-                {% for item in order_item.items.all %}
-                {{item}}
-                {% endfor %}
-            </td>
-            <td>{{order_item.ordered_date|date}}</td>
-            <td>{{order_item.payment.amount}}</td>
-            <td>{{order_item.payment.stripe_charge_id}}</td>
-            <td>
-              {% if order_item.in_transit == True %}
-              In Transit
-              {% elif order_item.shipped == True %}
-              Shipped
-              {% elif order_item.out_for_delivery == True %}
-              Out for delivery
-              {% elif order_item.delivered == True %}
-              Delivered
-              {% elif order_item.returned == True %}
-              Returned
-              {% elif order_item.refund_requested == True %}
-              Refund request inprogress
-              {% elif order_item.refund_granted == True %}
-              Refunded 
-              {% else %}
-              None
-              {% endif %}
-            </td>
-            <td>
-              <a href="{% url 'refund-view' %}" class="btn btn-warning float-right">Refund</a>
-            </td>
-          </tr>
-          {% elif order_item.returned == True %}
+          {% if order_item.in_transit == True %}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td scope="row">{{ order_item.order_id }}</td>
@@ -122,7 +86,7 @@
               {% endif %}
             </td>
           </tr>
-          {% elif order_item.refund_requested == True %}
+          {% elif order_item.shipped == True%}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td scope="row">{{ order_item.order_id }}</td>
@@ -155,7 +119,7 @@
               {% endif %}
             </td>
           </tr>
-          {% elif order_item.refund_granted == True %}
+          {% elif order_item.out_for_delivery == True %}
           <tr>
             <th scope="row">{{ forloop.counter }}</th>
             <td scope="row">{{ order_item.order_id }}</td>

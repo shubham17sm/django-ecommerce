@@ -30,6 +30,7 @@ urlpatterns = [
     path('check-zipcode/', views.CheckZipcodeView.as_view(), name='check-zipcode'),
     path('cat/<slug>/', views.item_by_category, name='item-by-category'),
     path('refund-request/', views.RequestRefundView.as_view(), name='refund-view'),
+    path('my-active-order/', views.MyActiveOrderSummary.as_view(), name='my-active-order'),
     path('search/', views.search, name='search'),
     path('accounts/', include('allauth.urls')),
 ]

@@ -53,6 +53,12 @@ class CreateAddressForm(forms.ModelForm):
     zipcode = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control'
     }))
+    default_address = forms.BooleanField(widget=forms.CheckboxInput(attrs={
+        'type': 'checkbox',
+        'class': 'custom-control-input',
+        'name': 'same_billing_addess',
+        'id': 'default-address'
+    }), required=False)
 
     class Meta:
         model = BilingAddress

@@ -108,6 +108,20 @@ class PreviousOrderSummary(LoginRequiredMixin, View):
             return redirect('/')
 
 
+#my order page(currently)
+class MyActiveOrderSummary(LoginRequiredMixin, View):
+    def get(self, *args, **kwargs):
+        try:
+            my_order = Order.objects.filter(user=self.request.user, ordered=True)
+            context = {
+                'object': my_order,
+            }
+            return render(self.request, 'my_active_order.html', context)
+        except ObjectDoesNotExist:
+            messages.error(self.request, "You have not ordered anything yet")
+            return redirect('/')
+
+
 class ItemDetailView(DetailView):
     model = Item
     template_name = "product-page.html"
@@ -204,6 +218,7 @@ class PaymentView(View):
                 item.save()
 
             order.ordered = True
+            order.in_transit = True
             order.payment = payment
             order.order_id = create_order_id()
             order.save()
@@ -528,13 +543,15 @@ def address_create(request):
         apartment_address = form.cleaned_data.get('apartment_address')
         country = form.cleaned_data.get('country')
         zipcode = form.cleaned_data.get('zipcode')
+        default_address = form.cleaned_data.get('default_address')
         form = BilingAddress(
                 user = request.user,
                 address_type=address_type,
                 street_address=street_address,
                 apartment_address=apartment_address,
                 country=country,
-                zipcode=zipcode
+                zipcode=zipcode,
+                default_address=default_address
         )
         form.save()
         messages.info(request, "Your form has been submitted successfully")
